@@ -1,0 +1,14 @@
+.indextext{
+    padding: 15px;
+    text-align: center;
+}
+
+.formstyle{
+    margin: 0 auto;
+    padding: 15px;
+    text-align: center;
+}
+
+.error{
+    color: red;
+}
