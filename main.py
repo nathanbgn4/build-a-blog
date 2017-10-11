@@ -36,7 +36,7 @@ def mainblog():
 def newpost():
     return render_template('newentry.html')
 
-posts = []
+
 @app.route('/newpostlogic', methods=['POST'])
 def newpostlogic():
     
@@ -48,18 +48,17 @@ def newpostlogic():
     elif len(blogbody) > 250:
         return render_template('newentry.html', error='Max 250 characters in post.')
    
-    posts.append(Blog(blogtitle, blogbody))
+    post = Blog(blogtitle, blogbody)
     
-    for post in posts:
-        db.session.add(post)
+    
+    db.session.add(post)
     db.session.commit()
-    newinfo = Blog.query.filter_by().all()
-    return redirect("/")
+    return redirect('/blogentry/?id='+str(post.id))
 
-@app.route('/postclicked/', methods=['GET'])
+@app.route('/blogentry/', methods=['GET'])
 def postclicked():
     postid = request.args.get('id')
-    post = Blog.query.filter_by(id=int(postid)).first()
+    post = Blog.query.filter_by(id=postid).first()
     return render_template('entry.html', post=post)
 
 if __name__ == '__main__':

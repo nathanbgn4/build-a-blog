@@ -7,7 +7,7 @@
         <p>No blog posts yet. :(</p>
     {% else %}
         {% for post in posts %}
-            <a href="/postclicked/?id={{post.id}}" style='font-size:20px;'>{{post.blogtitle}}</a>
+            <a href="/blogentry/?id={{post.id}}" style='font-size:20px;'>{{post.blogtitle}}</a>
             <p>{{post.blogbody}}</p>
         {% endfor %}
     {% endif %}
