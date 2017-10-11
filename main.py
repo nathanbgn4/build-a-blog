@@ -5,10 +5,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymsql://bloguser:bloggyboy@localhost:3306/blog'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://bloguser:bloggyboy@localhost:3306/blog'
 app.config['SQLALCHEMY_ECHO'] = True
 
 db = SQLAlchemy(app)
+
 
 class Blog(db.Model):
     
@@ -20,37 +21,46 @@ class Blog(db.Model):
         self.blogtitle = blogtitle
         self.blogbody = blogbody
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def index():   
-    if request.method == 'POST':
-        blog_title = request.form['blogtitle']
-        blog_body = request.form['blogbody']
-
-        new_post = Blog(blog_title, blog_body)
-
-        db.session.add(new_post)
-        db.session.commit()
-
+    posts = Blog.query.filter_by().all()
+    return render_template('index.html', posts=posts)
 
 
 @app.route('/blog', methods=['GET'])
 def mainblog():
+    posts = Blog.query.filter_by().all()
+    return render_template('index.html', posts=posts)
 
-    return render_template('index.html')
-
-@app.route('/newpost', methods='POST')
+@app.route('/newpost', methods=['GET'])
 def newpost():
-    blog_title = request.form['blogtitle']
-    blog_body = request.form['blogbody']
-    
-    if blog_title == "" or blog_body == "":
-        return render_template('newentry.html', error='Please fill out both fields.')
-    
-    new_post = Blog(blog_title, blog_body)
+    return render_template('newentry.html')
 
-    db.session.add(new_post)
+posts = []
+@app.route('/newpostlogic', methods=['POST'])
+def newpostlogic():
+    
+    blogtitle = request.form['title']
+    blogbody = request.form['body']
+    
+    if blogtitle == "" or blogbody == "":
+        return render_template('newentry.html', error='Please fill out both fields.')
+    elif len(blogbody) > 250:
+        return render_template('newentry.html', error='Max 250 characters in post.')
+   
+    posts.append(Blog(blogtitle, blogbody))
+    
+    for post in posts:
+        db.session.add(post)
     db.session.commit()
-    redirect('/blog')
+    newinfo = Blog.query.filter_by().all()
+    return redirect("/")
+
+@app.route('/postclicked/', methods=['GET'])
+def postclicked():
+    postid = request.args.get('id')
+    post = Blog.query.filter_by(id=int(postid)).first()
+    return render_template('entry.html', post=post)
 
 if __name__ == '__main__':
     app.run()

@@ -1,18 +1,17 @@
-{% extends "base.html"}
+{% extends "base.html" %}
 
 {% block content %}
         <div class="indextext">
-            <a href="index.html">Main blog Page</a>&emsp;<a href="newentry.html">Make a new entry</a>
             <h1>Create new blog post</h1>
         </div>
-        <span class="error">{{error}}</span>
         <div class="formstyle">
-            <form action="/bloginfo" name="newblog" methods="POST">
+            <form action="/newpostlogic" method="POST">
+                <span class="error">{{error}}</span>
                 <h2>Blog Title</h2>
-                <input name="blogtitle" type="text" value="" size="30">
+                <input name="title" type="text" value="" size="30">
                 <h2>Blog Entry</h2>
-                <textarea name="blogbody" rows="15" cols="50">Enter text(250 character max)</textarea>
+                <textarea name="body" style="width: 50%; height: 250px;"></textarea>
+                <input type="submit" value="Post Blog" style="display: block; margin: auto;">
             </form>
-            <input type="submit" value="Post Blog" action="/entry.html">
         </div>
 {% endblock %}
